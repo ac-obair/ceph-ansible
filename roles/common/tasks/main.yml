@@ -1,0 +1,136 @@
+#- debug: 
+#    msg: "{{ ansible_all_ipv4_addresses }}"
+#  tags:
+#    - testing
+
+- name: Ensure all local files are in sync
+  synchronize:
+    src: "{{ item.src  }}"
+    dest: "{{ item.dest  }}"
+    archive: yes
+  with_items:
+    - { src: 'config', dest: '/home/cephuser/.ssh/config' }
+    - { src: 'hosts', dest: '/etc/hosts' }
+    - { src: 'known_hosts', dest: '/home/cephuser/.ssh/known_hosts' }
+    - { src: 'motd', dest: '/etc/motd' }
+  tags:
+    - file_sync
+    - configuration 
+
+- name: Ensure proxy is added to environment, interactive/non-interactive login/non-login shell
+#  vars:
+#    no_proxy_ip: "{{ ansible_all_ipv4_addresses }}"
+  blockinfile:
+    dest: "{{ item.dest }}"
+    block: |
+      export http_proxy={{ http_proxy }}
+      export https_proxy={{ https_proxy }}
+      export no_proxy=10.130.249.*/24,10.130.249.*/24,localhost
+  with_items:
+    - { dest: '/home/cephuser/.bash_profile' }
+    - { dest: '/home/cephuser/.bashrc' }
+#  environment: 
+#    http_proxy: "{{ http_proxy }}"
+#    https_proxy: "{{ https_proxy }}"
+#    no_proxy: "{{ no_proxy_ip }}"
+  tags:
+    - proxy
+    - configuration
+
+#- name: Debug
+#  debug: 
+#    msg: "{{ inventory_hostname }}"
+#  tags:
+#    - testing
+
+- name: Ensure proxy env preserved when using sudo
+  lineinfile:
+     dest=/etc/sudoers
+     line='Defaults env_keep += "ftp_proxy http_proxy https_proxy no_proxy"'
+     regexp='.*proxy.*'
+     insertafter=EOF
+     state=present
+  tags:
+    - proxy
+    - configuration
+
+- name: Ensure Extra Package for Enterprise Linux installed
+  yum: name=epel-release state=present
+  tags:
+    - packages
+
+- name: Ensure system is up to date
+  yum: name=* state=latest
+  tags:
+    - packages
+
+- name: Ensure administrative packages are installed
+  yum: name={{ item }} state=present
+  with_items:
+   - rsync
+   - tcpdump
+   - lsof
+   - vim
+   - telnet
+   - screen
+   - tree
+   - unzip
+   - yum-plugin-priorities
+   - htop
+   - libselinux-python
+   - firewalld
+  tags:
+    - packages
+
+- name: Ensure firewalld is started and enabled
+  service: name=firewalld state=started enabled=yes
+  tags: 
+    - firewall
+    - configuration
+
+- name: Ensure services are opened
+  firewalld:
+    service: "{{ item.service }}"
+    permanent: "{{ item.permanent }}"
+    zone: "{{ item.zone }}"
+    state: "{{ item.state }}"
+  with_items:
+    - { service: 'ntp', 
+        permanent: true,
+        zone: 'public',
+        state: 'enabled' }
+  notify:
+    - restart firewall
+  tags:
+    - ntp 
+    - firewall
+    - configuration
+
+- name: Ensure ntp is installed
+  yum: name=ntp state=present
+  tags: 
+    - ntp
+    - configuration
+
+- name: Ensure ntp is configured
+  template: src=ntp.conf.j2 dest=/etc/ntp.conf
+  notify: 
+    - restart ntp
+  tags: 
+    - ntp
+    - configuration
+
+- name: Ensure the ntp service is started and enabled
+  service: name=ntpd state=started enabled=yes
+  notify:
+    - force ntp update
+  tags: 
+    - ntp
+    - configuration
+
+- name: Ensure SELinux is set to permissive
+  selinux: policy=targeted state=permissive
+  tags:
+    - selinux
+    - configuration
+

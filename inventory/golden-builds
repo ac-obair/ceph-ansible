@@ -1,0 +1,15 @@
+[gld-blds-mon]  # mon  golden build
+10.130.249.6   # als
+10.130.249.7   # mrl
+
+[gld-blds-osd]  # strg golden build
+10.130.249.5   # als
+10.130.249.8   # mrl
+
+[gld-blds:children]
+gld-blds-mon
+gld-blds-osd 
+
+[gld-blds:vars]
+ansible_ssh_user=cephuser
+ansible_ssh_private_key=/home/cephuser/.ssh/id_rsa

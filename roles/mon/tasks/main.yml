@@ -1,0 +1,13 @@
+- name: Ensure ports are opened
+  firewalld:
+    port: "{{ item.port }}"
+    permanent: "{{ item.permanent }}"
+    zone: "{{ item.zone }}"
+    state: "{{ item.state }}"
+  with_items:
+    - { port: '6789/tcp', 
+        permanent: true, 
+        zone: 'public',
+        state: 'enabled' }
+  notify: 
+    - restart firewall

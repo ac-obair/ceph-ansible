@@ -1,0 +1,70 @@
+---
+- name: Ensure haproxy and make dependencies are installed
+  yum: name={{ item }} state=present
+  with_items:
+    - haproxy
+    - gcc
+    - kernel-headers
+    - kernel-devel
+  tags:
+    - haproxy
+
+- name: Ensure haproxy is started and enabled
+  service: name=haproxy state=started enabled=yes
+  tags:
+    - haproxy
+
+- name: Ensure haproxy is configured
+  template: src=../templates/haproxy.cfg.j2 dest=/etc/haproxy/haproxy.cfg
+  notify: restart haproxy
+  tags:
+    - haproxy  
+
+- name: Ensure keepalived is installed
+  yum:  name=keepalived state=present
+  tags:
+    - haproxy
+    - keepalived
+
+- name: Ensure keepalived is started and enabled
+  service: name=keepalived state=started enabled=yes 
+  tags:
+    - haproxy
+    - keepalived
+
+- name: Ensure keepalived is configured
+  template: src=../templates/keepalived.conf.j2 dest=/etc/keepalived/keepalived.conf
+  tags:
+    - haproxy
+    - keepalived
+  notify:
+    - restart keepalived
+
+- name: Ensure firewalld is started and enabled
+  service: name=firewalld state=started enabled=yes
+  tags:
+    - firewall
+    - configuration
+
+- name: Ensure services are opened
+  firewalld:
+    service: "{{ item.service }}"
+    permanent: "{{ item.permanent }}"
+    zone: "{{ item.zone }}"
+    state: "{{ item.state }}"
+  with_items:
+    - { service: 'http',
+        permanent: true,
+        zone: 'public',
+        state: 'enabled' }
+    - { service: 'https',
+        permanent: true,
+        zone: 'public',
+        state: 'enabled' }
+  notify:
+    - restart firewall
+  tags:
+    - haproxy
+    - testing
+    - configuration
+

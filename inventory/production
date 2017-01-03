@@ -1,0 +1,38 @@
+[adm]
+prdceph-admin # 10.130.249.250 
+
+[mon]
+prdceph-mon00    # 10.130.249.100
+mrlceph-mon01    # 10.130.249.101 
+hltceph-mon02    # 10.130.49.10    
+prdceph-mon-temp # 10.130.249.102
+
+[rgw]
+prdceph-rgw00  # 10.130.249.201 
+mrlceph-rgw01  # 10.130.249.201
+hltceph-rgw02  # 10.130.49.11
+
+[prx]
+prdceph-prx01  # 10.130.249.15 
+mrlceph-prx02  # 10.130.249.16 
+
+[osd]
+prdceph-strg01  # 10.130.249.10 
+mrlceph-strg02  # 10.130.249.20 
+
+[cluster:children]
+mon
+rgw
+osd
+
+[cluster:vars]
+ansible_ssh_user=cephuser
+ansible_ssh_private_key=/home/cephuser/.ssh/id_rsa
+
+[loadbalancer:children]
+prx
+
+[loadbalancer:vars]
+ansible_ssh_user=cephuser
+ansible_ssh_private_key=/home/cephuser/.ssh/id_rsa
+

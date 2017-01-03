@@ -1,0 +1,20 @@
+# ALS
+10.130.249.250 prdceph-admin
+10.130.249.100 prdceph-mon00
+10.130.249.200 prdceph-rgw00
+10.130.249.10  prdceph-strg01
+10.130.249.15  prdceph-prx01
+
+# temp mon in place for quorum health, hillington still unreachable on port 6789
+10.130.249.102 prdceph-mon-temp
+
+# South St
+10.130.249.101 mrlceph-mon01
+10.130.249.201 mrlceph-rgw01
+10.130.249.20  mrlceph-strg02
+10.130.249.16  mrlceph-prx02
+
+# Hillington currently not in use
+10.130.49.10 hltceph-mon02
+10.130.49.11 hltceph-rgw02
+

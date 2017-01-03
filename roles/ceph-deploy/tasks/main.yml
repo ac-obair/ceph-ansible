@@ -1,0 +1,20 @@
+- name: Ensure yum dependencies are installed
+  yum: name={{ item }} state=present
+  with_items:
+   - yum-utils
+   - epel-release
+  
+- name: Ensure Cpeh repo added and gpgkey checked
+  yum_repository:
+    name: Ceph-noarch-packages
+    description: Latest Ceph Release Repo
+    file: ceph-deploy
+    baseurl: http://download.ceph.com/rpm-{{ release }}/{{ distro }}/noarch
+    gpgcheck: 1
+    gpgkey: https://download.ceph.com/keys/release.asc
+    enabled: yes
+  notify:
+    - Update system
+
+- name: Ensure main ceph-deploy component installed
+  yum: name=ceph-deploy state=present

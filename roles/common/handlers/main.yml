@@ -1,0 +1,8 @@
+- name: restart firewall
+  service: name=firewalld state=restarted
+
+- name: restart ntp
+  service: name=ntpd state=restarted
+
+- name: force ntp update
+  shell: "systemctl stop ntpd ; ntpdate -s {{ ntpserver }} ; systemctl start ntpd"

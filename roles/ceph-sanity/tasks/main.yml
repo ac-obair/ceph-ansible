@@ -1,0 +1,23 @@
+---
+- name: Ensure ceph files are present and accessible
+  file:
+    path: "{{ item.path }}"
+    owner: "{{ ceph_user }}"
+    group: "{{ ceph_user }}"
+  with_items:
+    - { path: '/etc/ceph/ceph.client.admin.keyring' }  
+    - { path: '/etc/ceph/ceph.conf' }  
+  tags: 
+    - ceph-sanity
+
+- name: Ensure ceph rgw key is present and accessible
+  file:
+    path: /var/lib/ceph/radosgw/ceph-rgw.{{ inventory_hostname }}/keyring
+    owner: ceph
+    group: ceph
+  when: inventory_hostname in groups['rgw']
+  tags: 
+    - ceph-sanity
+    - rgw-key
+
+

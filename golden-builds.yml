@@ -1,0 +1,22 @@
+- hosts: gld-blds
+  name: Manage server state, these changes must not effect ceph directly
+  become: true
+  gather_facts: yes
+  roles:
+    - common
+
+- hosts: gld-blds-mon
+  name: Ensure firewall is configured for mon peering
+  become: true
+  gather_facts: yes
+  roles:
+    - mon
+
+- hosts: gld-blds-osd
+  name: Ensure firewall is configured for osd peering, replication and incoming connections
+  become: true
+  gather_facts: yes
+  roles:
+    - osd
+
+

@@ -1,0 +1,5 @@
+---
+ntpserver: utils.arnoldclark.com
+http_proxy: http://utils.arnoldclark.com:3128/
+https_proxy: http://utils.arnoldclark.com:3128/
+ceph_user: cephuser

@@ -1,0 +1,30 @@
+---
+- hosts: cluster
+  name: Ensure cluster nodes are configured properly with common tasks
+  become: true
+  gather_facts: yes
+  roles:
+    - common
+ 
+- hosts: adm
+  name: Ensure deploy admin node is configured properly with ceph-deploy tasks
+  connection: local
+  become: true
+  gather_facts: yes
+  roles:
+    - common
+
+- hosts: prx
+  name: Ensure load balancers are configured properly with proxy tasks
+  become: true
+  gather_facts: yes
+  roles:
+    - common
+    - haproxy
+
+- hosts: mon
+  name: Ensure that ceph-dash monitoring is setup and live on each monitor
+  become: true
+  gather_facts: yes
+  roles:
+    - ceph-monitoring

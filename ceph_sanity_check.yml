@@ -1,0 +1,33 @@
+---
+- hosts: adm
+  name: Ensure deploy admin node is configured properly with ceph-deploy tasks
+  connection: local
+  become: true
+  gather_facts: no
+  roles:
+    - ceph-deploy
+    - ceph-sanity
+
+- hosts: mon
+  name: Ensure monitor nodes are configured properly with mon tasks
+  become: true
+  gather_facts: no
+  roles:
+    - mon
+    - ceph-sanity
+
+- hosts: osd
+  name: Ensure that storage nodes are configured properly with osd tasks
+  become: true
+  gather_facts: no
+  roles:
+    - osd
+    - ceph-sanity
+
+- hosts: rgw
+  name: Ensure gateway nodes are configured properly with rgw specific tasks
+  become: true
+  gather_facts: no
+  roles:
+    - rgw
+    - ceph-sanity

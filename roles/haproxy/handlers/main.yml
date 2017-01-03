@@ -1,0 +1,17 @@
+---
+- name: restart haproxy
+  service: name=haproxy state=restarted
+  tags:
+    - haproxy
+
+- name: restart keepalived
+  service: name=keepalived state=restarted
+  tags:
+    - keepalived
+    - haproxy
+
+- name: restart firewall
+  service: name=firewalld state=restarted
+  tags: 
+    - haproxy
+    - configuration

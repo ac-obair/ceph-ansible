@@ -1,0 +1,35 @@
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+
+10.130.251.75 prdvip03.arnoldclark.com prdvip03 utils.arnoldclark.com
+10.4.1.208    time.arnoldclark.com
+10.130.249.252  prdceph-vip01.arnoldclark.com prdceph-vip01 radosgw.arnoldclark.com ceph-dash.arnoldclark.com
+
+# Alison Street
+10.130.249.250 prdceph-admin 
+10.130.249.100 prdceph-mon00
+10.130.249.200 prdceph-rgw00
+10.130.249.10  prdceph-strg01
+10.130.249.15  prdceph-prx01
+
+# In place for quorum health: hillington currently unreachable on port 6789
+10.130.249.102 prdceph-mon-temp 
+
+# South Street
+10.130.249.101 mrlceph-mon01
+10.130.249.201 mrlceph-rgw01
+10.130.249.20  mrlceph-strg02
+10.130.249.16  mrlceph-prx02
+
+# Hillington : currently unreachable
+10.130.49.10 hltceph-mon02
+10.130.49.11 hltceph-rgw02
+
+# ---------------------
+# Golden-builds  
+# run golden-builds.yml on inventory/golden-builds before cloning 
+# 10.130.249.5 # als
+# 10.130.249.6 # als
+# 10.130.249.7 # mrl
+# 10.130.249.8 # mrl
+# --------------------- 

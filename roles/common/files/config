@@ -1,0 +1,48 @@
+Host 10.130.249.250 # admin
+ Hostname prdceph-admin 
+ User cephuser
+ Identityfile ~/.ssh/id_rsa
+Host 10.130.249.100 # als
+ Hostname prdceph-mon00
+ User cephuser
+ Identityfile ~/.ssh/id_rsa
+Host 10.130.249.101 # mrl
+ Hostname prdceph-mon01
+ User cephuser
+ Identityfile ~/.ssh/id_rsa
+Host 10.130.49.10  # hlt
+ Hostname prdceph-mon02
+ User cephuser
+ Identityfile ~/.ssh/id_rsa
+Host 10.130.249.200 # als
+ Hostname prdceph-rgw00
+ User cephuser
+ Identityfile ~/.ssh/id_rsa
+Host 10.130.249.201 # als
+ Hostname prdceph-rgw01
+ User cephuser
+ Identityfile ~/.ssh/id_rsa
+Host 10.130.49.11   # hlt
+ Hostname prdceph-rgw02
+ User cephuser
+ Identityfile ~/.ssh/id_rsa
+Host 10.130.249.10  # als
+ Hostname prdceph-strg01
+ User cephuser
+ Identityfile ~/.ssh/id_rsa
+Host 10.130.249.15  # als
+ Hostname prdceph-prx01
+ User cephuser
+ Identityfile ~/.ssh/id_rsa
+Host 10.130.249.16  # mrl
+ Hostname prdceph-prx02
+ User cephuser
+ Identityfile ~/.ssh/id_rsa
+Host 10.130.249.20  # mrl
+ Hostname prdceph-strg02
+ User cephuser
+ Identityfile ~/.ssh/id_rsa
+Host 10.130.249.102  # als
+ Hostname prdceph-mon-temp
+ User cephuser
+ Identityfile ~/.ssh/id_rsa

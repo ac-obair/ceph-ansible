@@ -1,0 +1,26 @@
+- name: Ensure ports are opened
+  firewalld:
+    port: "{{ item.port }}"
+    permanent: "{{ item.permanent }}"
+    zone: "{{ item.zone }}"
+    state: "{{ item.state }}"
+  with_items:
+    - { port: '6800-7300/tcp', 
+        permanent: true, 
+        zone: 'public',
+        state: 'enabled' }
+  notify: 
+    - restart firewall
+  tags:
+    - firewall
+    - configuration
+
+- name: Ensure max thread count extended
+  sysctl:
+    name: kernel.pid_max
+    value: 4194304
+    sysctl_set: yes
+  tags:
+    - configuration
+    - kernel
+

@@ -1,0 +1,49 @@
+global
+    log         127.0.0.1 local2
+
+    chroot      /var/lib/haproxy
+    pidfile     /var/run/haproxy.pid
+    maxconn     {{ global_maxconn }}
+    user        haproxy
+    group       haproxy
+    daemon
+    stats socket /var/lib/haproxy/stats
+
+defaults
+    mode                    http
+    log                     global
+    option                  httplog
+    option                  dontlognull
+    option http-server-close
+    option forwardfor       except 127.0.0.0/8
+    option                  redispatch
+    retries                 3
+    timeout http-request    10s
+    timeout queue           1m
+    timeout connect         10s
+    timeout client          1m
+    timeout server          1m
+    timeout http-keep-alive 10s
+    timeout check           10s
+    maxconn                 {{ defaults_maxconn }}
+
+frontend radosgw_request
+     bind  {{ vip }}:80
+     stats uri /haproxy?stats
+     default_backend {{ default_backend }}
+
+     # reach ceph monitoring web front
+     acl {{ ceph_dash.acl }} hdr(Host) -i {{ ceph_dash.url }}
+     use_backend {{ ceph_dash.backend }} if {{ ceph_dash.acl }}
+
+backend {{ radosgws.backend }}
+     balance     {{ algorithm }}
+     {% for rgw in radosgws.hosts %}
+     server   {{ rgw.hostname }}  {{ rgw.ip }} check
+     {% endfor %}
+
+backend {{ ceph_dash.backend }}
+     balance   {{ algorithm }}
+     {% for dash in ceph_dash.dashes %}
+     server {{ dash.hostname }}   {{ dash.ip }} check
+     {% endfor %}    
