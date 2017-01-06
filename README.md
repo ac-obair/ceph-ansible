@@ -4,9 +4,9 @@
 The first script here can be run on golden builds to keep them up to date should ever we need them
 
 
-1. *provision_servers* : provisions with common tasks, could be used to bring a bare server up to ceph standard
-2. *provision_cluster* : provisions ceph components osds, mon, rgws and admins
-3. *ceph_sanity_check* : performs sanity checking ceph related attributes to avoid common issues
+1. **provision_servers** : Provisions with common tasks, could be used to bring a bare server up to ceph standard
+2. **provision_cluster** : Provisions ceph components osds, mon, rgws and admins
+3. **ceph_sanity_check** : Performs sanity checking ceph related attributes to avoid common issues
 
 ```
 Examples
@@ -23,12 +23,12 @@ Examples
 
 ###  Details about playbooks
 
-*Golden-builds:*
+#### Golden-builds:
  Golden builds are kept up to date with any changes that need to be made to the cluster via ansible as well.
 
-* gld-blds-mon: *
+* **gld-blds-mon:**
   this can be used for any Ceph service that isn't an osd
-* gld-blds-osd: *
+* **gld-blds-osd:**
   This is specifically meant for osd create, main difference being it has 2 networks to set up.
 
 
