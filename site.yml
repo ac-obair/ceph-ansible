@@ -1,25 +1,9 @@
 #!/usr/bin/env ansible-playbook
 ---
-# This is the master playbook for the ceph infrastructure and has been designed
-# to simplify how and in which order the servers it should be run with 
-#
-# This file is also directly executable by ansilbe-playbook
-# ./sites.yml -i inventory/production
-#
-# Alternately 
-#                                                      Optional
-# ansible-playbook -i inventory/production site.yml    --tags <tagged task to limit by> --limit <group to limit by>
-# ansible-playbook -i inventory/golden-builds site.yml --tags <tagged task to limit by> --limit <group to limit by>
-#
-# Note: Golden-builds will be powered off but should be powered on and ansible run against before cloning to ensure that
-#       They have the lastest up to date configs and info before deploying an element of ceph to them. 
-
- # Deploy to golden-builds only (should be powered on if deploying, or will fail, not essential unless about to clone them)
-#- name: Blah
-#  tasks:
-- include: golden-builds.yml
- # Deploys to every node whereby specific roles and dependencies bring them into a useable state
-- include: infrastructure.yml
- # Deploys to only ceph related nodes whereby specific roles and dependencies check they are in a useable ceph state
-- include: ceph_sanity_check.yml
-
+- include: gbuilds.yml
+- include: common.yml
+- include: cluster.yml
+- include: admin.yml
+- include: proxies.yml
+- include: mons.yml
+- include: checks.yml

@@ -1,0 +1,75 @@
+- name: Ensure nginx is installed
+  yum: name={{ item }} state=present
+  with_items:
+   - nginx
+  tags:
+    - nginx
+    - packages
+
+- name: Ensure nginx is started and enabled
+  service: name=nginx state=started enabled=yes
+  tags:
+    - nginx
+
+- name: Ensure serving directories exist
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - /etc/nginx/sites-enabled
+    - /etc/nginx/sites-available
+  tags:
+    - nginx
+
+- name: Ensure firewalld is started and enabled
+  service: name=firewalld state=started enabled=yes
+  tags: 
+    - nginx
+    - firewall
+
+- name: Ensure latest custom version of cephdash is avaialble to nginx
+  synchronize:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: push
+    archive: yes
+  with_items:
+    - { src: 'ceph-dash', dest: '/etc/nginx/sites-available/' }
+  tags:
+    - nginx
+    - cephdash
+
+- name: Ensure ceph-dash is being served by nginx
+  file:
+    src: /etc/nginx/sites-available/ceph-dash
+    dest: /etc/nginx/sites-enabled/ceph-dash
+    state: link
+  tags:
+    - nginx
+    - cephdash
+
+- name: Ensure services are opened
+  firewalld:
+    port: "{{ item.port }}"
+    permanent: "{{ item.permanent }}"
+    zone: "{{ item.zone }}"
+    state: "{{ item.state }}"
+  with_items:
+    - { port: '5000/tcp', 
+        permanent: true,
+        zone: 'public',
+        state: 'enabled' }
+  notify:
+    - restart firewall
+  tags:
+    - firewall
+    - nginx
+    - cephdash
+
+- name: Ensure ntp is configured
+  template: src=nginx.conf.j2 dest=/etc/nginx/nginx.conf
+  notify: 
+    - restart nginx
+  tags: 
+    - nginx
+    - configuration

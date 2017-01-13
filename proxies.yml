@@ -1,0 +1,7 @@
+---
+- hosts: proxies
+  name: Ensure load balancers are configured properly with proxy specific tasks
+  become: true
+  gather_facts: yes
+  roles:
+    - haproxy

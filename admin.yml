@@ -1,0 +1,7 @@
+---
+- hosts: admin
+  name: Ensure admin deploy configured with admin specific tasks
+  become: true
+  gather_facts: yes
+  roles:
+    - common

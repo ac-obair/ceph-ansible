@@ -1,0 +1,7 @@
+---
+- hosts: cluster
+  name: Ensure cluster nodes are configured and brought to known good start
+  become: true
+  gather_facts: yes
+  roles:
+    - common

@@ -1,0 +1,8 @@
+---
+- hosts: mon
+  name: Ensure that ceph-dash monitoring is setup and live on each monitor
+  become: true
+  gather_facts: yes
+  roles:
+    - nginx
+    - dash

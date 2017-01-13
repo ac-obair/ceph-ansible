@@ -1,0 +1,6 @@
+- hosts: cluster
+  name: Ensure all nodes are configured with common tasks
+  become: true
+  gather_facts: yes
+  roles:
+    - common
